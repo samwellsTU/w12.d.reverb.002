@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>REVERB</title>
+    <script src="reverb.js" type="module"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 2em;
+            line-height: 1.6;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 4px;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 1em;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <h1>Web Audio: Reverb with <code>ConvolverNode</code></h1>
+    <button id="start">Mic On</button>
+    <button id="stop">Mic Off</button>
+    <p>
+        The <code>ConvolverNode</code> in the Web Audio API applies a linear convolution effect to audio. This is often used to simulate reverberation based on an <strong>impulse response</strong> (IR), which captures the acoustic signature of a physical space.
+    </p>
+
+    <h2>What is Linear Convolution?</h2>
+    <p>
+        Linear convolution is a process that combines two signals—typically an input signal and an impulse response—to produce a new signal. In audio, this means shaping an input sound based on how it would behave in a real-world environment (like a concert hall or chapel).
+    </p>
+
+    <h2>Loading an Impulse Response</h2>
+    <p>
+        To use a <code>ConvolverNode</code>, you need to load an audio file that contains the impulse response and decode it into an <code>AudioBuffer</code>. This buffer is then assigned to the <code>buffer</code> property of the convolver. Here's how that works:
+    </p>
+
+    <h2>Reverb with a Convolver Node</h2>
+    <pre><code>const createReverb = async function() {
+    let convolver = audioContext.createConvolver();
+
+    // Load impulse response
+    let response = await fetch("ir/TPAC-chapel.wav");
+    let arraybuffer = await response.arrayBuffer();
+    convolver.buffer = await audioContext.decodeAudioData(arraybuffer);
+
+    return convolver;
+}
+
+// Usage
+reverb = await createReverb();
+reverb.connect(outputGain);
+</code></pre>
+
+    <p>
+        This example loads an impulse response from <code>TPAC-chapel.wav</code> and sets it as the buffer for a <code>ConvolverNode</code>. Once created, the reverb is connected to the audio graph through <code>outputGain</code>.
+    </p>
+
+</body>
+</html>
